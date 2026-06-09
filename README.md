@@ -1,4 +1,3 @@
-# Minmium-Wage-Generator-HKDSE
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -83,7 +82,6 @@
 
         const isEffective = W_floor > 40;
         
-        // Math coordinates mapping
         let Qd = 100;
         let Qs = 100;
         
@@ -97,7 +95,6 @@
         const surplus = isEffective ? (Qs - Qd) : 0;
         const totalEarnings = (isEffective ? W_floor : 40) * actualEmp;
 
-        // Update UI Text elements
         statEmp.innerText = actualEmp.toFixed(1);
         statUnemp.innerText = surplus.toFixed(1);
         statEarnings.innerText = '$' + Math.round(totalEarnings);
@@ -116,18 +113,16 @@
             earningsCard.className = "stat-card";
         }
 
-        // --- GRAPH CANVAS RENDERING ---
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         const padding = 60;
         const graphWidth = canvas.width - padding * 2;
         const graphHeight = canvas.height - padding * 2;
 
-        // Translate graph units (0-150 Q, 0-80 W) to pixel points
         function getX(q) { return padding + (q / 150) * graphWidth; }
         function getY(w) { return canvas.height - padding - (w / 80) * graphHeight; }
 
-        // Draw Axes
+        // Axes
         ctx.beginPath();
         ctx.strokeStyle = '#334155';
         ctx.lineWidth = 2;
@@ -143,18 +138,18 @@
         ctx.fillText('Quantity of Labor (Q)', canvas.width - padding - 80, canvas.height - padding + 40);
         ctx.fillText('0', padding - 15, canvas.height - padding + 15);
 
-        // Draw Shaded Rectangles (Gain vs Loss Evaluation)
+        // Revenue Change Shading
         if (isEffective) {
-            // Gain Area (W_floor down to 40, out to Qd)
+            // Gain Rectangle
             ctx.fillStyle = 'rgba(16, 185, 129, 0.15)';
             ctx.fillRect(getX(0), getY(W_floor), getX(Qd) - getX(0), getY(40) - getY(W_floor));
             
-            // Loss Area (40 down to 0, from Qd out to 100)
+            // Loss Rectangle
             ctx.fillStyle = 'rgba(239, 68, 68, 0.15)';
             ctx.fillRect(getX(Qd), getY(40), getX(100) - getX(Qd), getY(0) - getY(40));
         }
 
-        // Draw Demand Curve (D)
+        // Demand Curve (D)
         ctx.beginPath();
         ctx.strokeStyle = '#2563eb';
         ctx.lineWidth = 3;
@@ -168,7 +163,7 @@
         ctx.stroke();
         ctx.fillText('D', canvas.width - padding - 20, elasticity === 'inelastic' ? getY(10) : getY(20));
 
-        // Draw Supply Curve (S)
+        // Supply Curve (S)
         ctx.beginPath();
         ctx.strokeStyle = '#ea580c';
         ctx.lineWidth = 3;
@@ -181,16 +176,14 @@
         ctx.setLineDash([4, 4]);
         ctx.strokeStyle = '#94a3b8';
         ctx.lineWidth = 1;
-        // W = 40
         ctx.beginPath(); ctx.moveTo(getX(0), getY(40)); ctx.lineTo(getX(100), getY(40)); ctx.stroke();
-        // Q = 100
         ctx.beginPath(); ctx.moveTo(getX(100), getY(0)); ctx.lineTo(getX(100), getY(40)); ctx.stroke();
         ctx.setLineDash([]);
         ctx.fillStyle = '#475569';
         ctx.fillText('W_e ($40)', padding - 55, getY(40) + 4);
         ctx.fillText('Q_e (100)', getX(100) - 25, canvas.height - padding + 20);
 
-        // Minimum Wage Policy Line
+        // Floor Policy Line
         ctx.beginPath();
         ctx.strokeStyle = isEffective ? '#dc2626' : '#94a3b8';
         ctx.lineWidth = isEffective ? 2.5 : 1.5;
@@ -200,13 +193,10 @@
         ctx.fillStyle = isEffective ? '#dc2626' : '#64748b';
         ctx.fillText('W_min ($' + W_floor + ')', getX(145) - 80, getY(W_floor) - 8);
 
-        // Policy intersection projections
         if (isEffective) {
             ctx.setLineDash([2, 2]);
             ctx.strokeStyle = '#dc2626';
-            // Down from Qd
             ctx.beginPath(); ctx.moveTo(getX(Qd), getY(W_floor)); ctx.lineTo(getX(Qd), getY(0)); ctx.stroke();
-            // Down from Qs
             ctx.beginPath(); ctx.moveTo(getX(Qs), getY(W_floor)); ctx.lineTo(getX(Qs), getY(0)); ctx.stroke();
             ctx.setLineDash([]);
             
@@ -214,7 +204,6 @@
             ctx.fillText('Q_d', getX(Qd) - 10, canvas.height - padding + 20);
             ctx.fillText('Q_s', getX(Qs) - 10, canvas.height - padding + 20);
 
-            // Highlight Unemployment Gap on the line
             ctx.beginPath();
             ctx.fillStyle = '#ef4444';
             ctx.arc(getX(Qd), getY(W_floor), 5, 0, 2 * Math.PI);
@@ -225,7 +214,7 @@
 
     wageSlider.addEventListener('input', drawMarket);
     elasticitySelect.addEventListener('change', drawMarket);
-    drawMarket(); // Initial draw
+    drawMarket();
 </script>
 
 </body>
