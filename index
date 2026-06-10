@@ -6,15 +6,15 @@
     <title>HKDSE Econ: Minimum Wage Interactive Lab</title>
     <style>
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: Arial, sans-serif;
             background-color: #f4f7f6;
             color: #333;
             max-width: 600px;
             margin: 40px auto;
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         h1 { color: #2c3e50; text-align: center; }
         .market-env { background: #ecf0f1; padding: 15px; border-radius: 8px; margin: 20px 0; }
@@ -26,7 +26,6 @@
             font-weight: bold;
             text-align: center;
             font-size: 1.1em;
-            transition: all 0.3s ease;
         }
         .ineffective { background-color: #ffeaa7; color: #d35400; }
         .effective { background-color: #ff7675; color: #c0392b; }
@@ -35,14 +34,14 @@
 </head>
 <body>
 
-    <h1>HKDSE Economics Lab 📈</h1>
-    <p><strong>Topic:</strong> Market Intervention — Statutory Minimum Wage</p>
+    <h1>Minmium-Wage-Generator-HKDSE</h1>
+    <p style="text-align: center; color: #7f8c8d;">Market Intervention — Statutory Minimum Wage</p>
     
     <div class="market-env">
         <p>📊 <strong>Market Condition:</strong><br>
-        Equilibrium Wage ($W_e$): <strong>$60 / hr</strong><br>
-        Labor Supplied at $60: 100,000 workers<br>
-        Labor Demanded at $60: 100,000 workers</p>
+        Equilibrium Wage: <strong>$60 / hr</strong><br>
+        Labor Supplied: 100,000 workers<br>
+        Labor Demanded: 100,000 workers</p>
     </div>
 
     <div class="slider-container">
@@ -55,30 +54,26 @@
     </div>
 
     <script>
-        const slider = document.getElementById('wageSlider');
-        const wageVal = document.getElementById('wageVal');
-        const result = document.getElementById('result');
-
-        const equilibriumWage = 60;
+        // Game Logic
+        var slider = document.getElementById('wageSlider');
+        var wageVal = document.getElementById('wageVal');
+        var result = document.getElementById('result');
 
         slider.oninput = function() {
-            let currentWage = parseInt(this.value);
+            var currentWage = parseInt(this.value);
             wageVal.innerHTML = currentWage;
 
-            if (currentWage === equilibriumWage) {
+            if (currentWage === 60) {
                 result.innerHTML = "🎯 Market is at Equilibrium. No deadweight loss!";
                 result.className = "result-box equilibrium";
             } 
-            else if (currentWage < equilibriumWage) {
-                result.innerHTML = `⚠️ Ineffective Minimum Wage!<br> Because $${currentWage} is BELOW the equilibrium wage ($60), the market forces drag it back up to $60. No structural unemployment is created.`;
+            else if (currentWage < 60) {
+                result.innerHTML = "⚠️ Ineffective Minimum Wage!<br>Because $" + currentWage + " is BELOW the equilibrium wage ($60), market forces pull it back to $60. No structural unemployment.";
                 result.className = "result-box ineffective";
             } 
             else {
-                // Calculate simulated labor gap for DSE relevance
-                let gap = (currentWage - equilibriumWage) * 5000;
-                result.innerHTML = `🚨 Effective Minimum Wage!<br> Because $${currentWage} is ABOVE equilibrium ($60):<br>
-                • Quantity Supplied (QS) > Quantity Demanded (QD)<br>
-                • Result: A <strong>Surplus of Labor</strong> of roughly ${gap} workers (Unemployment)!`;
+                var gap = (currentWage - 60) * 5000;
+                result.innerHTML = "🚨 Effective Minimum Wage!<br>Because $" + currentWage + " is ABOVE equilibrium ($60):<br>• Quantity Supplied > Quantity Demanded<br>• Result: A Surplus of Labor of " + gap + " workers (Unemployment)!";
                 result.className = "result-box effective";
             }
         }
