@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HKDSE Econ: Minimum Wage Interactive Lab</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            background: white;
+        }
+        h1 { color: #2c3e50; text-align: center; }
+        .market-env { background: #ecf0f1; padding: 15px; border-radius: 8px; margin: 20px 0; }
+        .slider-container { margin: 25px 0; text-align: center; }
+        input[type=range] { width: 80%; margin-top: 10px; }
+        .result-box {
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+        .ineffective { background-color: #ffeaa7; color: #d35400; }
+        .effective { background-color: #ff7675; color: #c0392b; }
+        .equilibrium { background-color: #55efc4; color: #00b894; }
+    </style>
+</head>
+<body>
+
+    <h1>HKDSE Economics Lab 📈</h1>
+    <p><strong>Topic:</strong> Market Intervention — Statutory Minimum Wage</p>
+    
+    <div class="market-env">
+        <p>📊 <strong>Market Condition:</strong><br>
+        Equilibrium Wage ($W_e$): <strong>$60 / hr</strong><br>
+        Labor Supplied at $60: 100,000 workers<br>
+        Labor Demanded at $60: 100,000 workers</p>
+    </div>
+
+    <div class="slider-container">
+        <label for="wageSlider">Set the Minimum Wage: <strong>$<span id="wageVal">60</span> / hr</strong></label><br>
+        <input type="range" id="wageSlider" min="40" max="90" value="60">
+    </div>
+
+    <div id="result" class="result-box equilibrium">
+        Market is at Equilibrium. Employment is maximized!
+    </div>
+
+    <script>
+        const slider = document.getElementById('wageSlider');
+        const wageVal = document.getElementById('wageVal');
+        const result = document.getElementById('result');
+
+        const equilibriumWage = 60;
+
+        slider.oninput = function() {
+            let currentWage = parseInt(this.value);
+            wageVal.innerHTML = currentWage;
+
+            if (currentWage === equilibriumWage) {
+                result.innerHTML = "🎯 Market is at Equilibrium. No deadweight loss!";
+                result.className = "result-box equilibrium";
+            } 
+            else if (currentWage < equilibriumWage) {
+                result.innerHTML = `⚠️ Ineffective Minimum Wage!<br> Because $${currentWage} is BELOW the equilibrium wage ($60), the market forces drag it back up to $60. No structural unemployment is created.`;
+                result.className = "result-box ineffective";
+            } 
+            else {
+                // Calculate simulated labor gap for DSE relevance
+                let gap = (currentWage - equilibriumWage) * 5000;
+                result.innerHTML = `🚨 Effective Minimum Wage!<br> Because $${currentWage} is ABOVE equilibrium ($60):<br>
+                • Quantity Supplied (QS) > Quantity Demanded (QD)<br>
+                • Result: A <strong>Surplus of Labor</strong> of roughly ${gap} workers (Unemployment)!`;
+                result.className = "result-box effective";
+            }
+        }
+    </script>
+</body>
+</html>
